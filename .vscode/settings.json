@@ -1,0 +1,12 @@
+{
+    "python.pythonPath": "${workspaceFolder}/myenv",
+    "python.linting.pylintArgs": [
+        "--disable=C0103",
+        "--disable=C0111",
+        "--disable=W0401",
+        "--disable=W0614",
+        "--load-plugins=pylint_django"
+    ],
+    "files.insertFinalNewline": true,
+    "editor.formatOnSave": true
+}
