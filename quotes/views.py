@@ -1,9 +1,36 @@
+import unicodedata
+
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
+import requests
 from twilio.rest import Client, TwilioException
 
 from .forms import SendTextForm
+
+
+def get_quote() -> dict:
+    """Call RapidAPI and return the retrieved response in dict"""
+    url = 'https://quotes15.p.rapidapi.com/quotes/random/'
+    params = {'language_code': 'en'}
+    headers = {
+        'x-rapidapi-host': 'quotes15.p.rapidapi.com',
+        'x-rapidapi-key': settings.RAPID_API_KEY,
+    }
+    try:
+        response = requests.get(url, params=params, headers=headers)
+    except requests.RequestException:
+        return {}
+    return response.json()
+
+
+def format_quote_response(quote_response: dict) -> str:
+    if not quote_response:
+        return 'Sent through Twilio API!'
+    content = quote_response['content']
+    normalized_content = unicodedata.normalize('NFKD', content)
+    originator_name = quote_response['originator']['name']
+    return f'"{normalized_content}" ({originator_name})'
 
 
 class TextSuccessView(TemplateView):
@@ -18,7 +45,8 @@ class SendTextFormView(FormView):
     def form_valid(self, form):
         client = Client(settings.TWILIO_ACCOUNT_SID,
                         settings.TWILIO_AUTH_TOKEN)
-        text_body = 'Sent through Twilio API!'
+        quote_response = get_quote()
+        text_body = format_quote_response(quote_response)
         recipient_number = form.cleaned_data['number']
         try:
             client.messages.create(
