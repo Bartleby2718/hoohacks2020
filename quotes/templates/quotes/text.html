@@ -1,5 +1,8 @@
+{% extends 'quotes/base.html' %}
+{% block content %}
 <form method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Send me a text!">
 </form>
+{% endblock content %}

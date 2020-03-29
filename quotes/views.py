@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
 from twilio.rest import Client, TwilioException
@@ -33,5 +32,5 @@ class SendTextFormView(FormView):
         return super().form_valid(form)
 
 
-def home(request):
-    return HttpResponse('Hello world!')
+class HomeView(TemplateView):
+    template_name = 'quotes/home.html'
