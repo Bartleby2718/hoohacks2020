@@ -9,6 +9,7 @@ from django.views.generic import FormView, TemplateView
 import requests
 from twilio.rest import Client, TwilioException
 from twilio.twiml.messaging_response import MessagingResponse
+from twilio.twiml.voice_response import VoiceResponse
 
 from .forms import SendTextForm
 
@@ -78,4 +79,15 @@ def handle_inbound_sms(request):
         response.message('WAHOOWA')
     else:
         response.message('Hi there!')
+    return HttpResponse(str(response))
+
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def handle_inbound_calls(request):
+    """Respond to incoming calls with a friendly SMS."""
+    message = ("Hi there. I'm Jihoon! I'm a CS major at UVA "
+               "participating in HooHacks 2020!")
+    response = VoiceResponse()
+    response.say(message, voice='man')
     return HttpResponse(str(response))
