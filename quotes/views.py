@@ -1,10 +1,14 @@
 import unicodedata
 
 from django.conf import settings
+from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from django.views.generic import FormView, TemplateView
 import requests
 from twilio.rest import Client, TwilioException
+from twilio.twiml.messaging_response import MessagingResponse
 
 from .forms import SendTextForm
 
@@ -62,3 +66,16 @@ class SendTextFormView(FormView):
 
 class HomeView(TemplateView):
     template_name = 'quotes/home.html'
+
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def handle_inbound_sms(request):
+    """Send a dynamic reply to an incoming text message"""
+    body: str = request.POST.get('Body', '')
+    response = MessagingResponse()
+    if body.lower().startswith('wahoowa'):
+        response.message('WAHOOWA')
+    else:
+        response.message('Hi there!')
+    return HttpResponse(str(response))
