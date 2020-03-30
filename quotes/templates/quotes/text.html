@@ -1,8 +1,18 @@
 {% extends 'quotes/base.html' %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Send me a text!">
-</form>
-{% endblock content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Want a random quote?</h1>
+        <p class="lead">Enter your phone number, and you'll get a random quote via text!</p>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.number.errors }}
+            {{ form.number.label_tag }}
+            {{ form.number }}
+            <small id="help" class="form-text text-muted">We don't store or share this phone number.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Send me a text!</button>
+    </form>{% endblock content %}
+<div>
