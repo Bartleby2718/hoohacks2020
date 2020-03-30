@@ -75,10 +75,10 @@ def handle_inbound_sms(request):
     """Send a dynamic reply to an incoming text message"""
     body: str = request.POST.get('Body', '')
     response = MessagingResponse()
-    if body.lower().startswith('wahoowa'):
-        response.message('WAHOOWA')
+    if 'wahoowa' in body.lower():
+        response.message('WAHOOWA! Are you a HOO?')
     else:
-        response.message('Hi there!')
+        response.message('Hi there! Nice to meet you :)')
     return HttpResponse(str(response))
 
 
@@ -86,8 +86,11 @@ def handle_inbound_sms(request):
 @csrf_exempt
 def handle_inbound_calls(request):
     """Respond to incoming calls with a friendly SMS."""
-    message = ("Hi there. I'm Jihoon! I'm a CS major at UVA "
-               "participating in HooHacks 2020!")
+    # Change the spelling so that the message can be pronounced correctly.
+    message = ("Hi there. I'm gee hoon! I'm a CS major at the University of "
+               "Virginia. It's my first time participating in a hackathon, but"
+               "I enjoyed it so much! Email me if you want to learn more about "
+               "me.")
     response = VoiceResponse()
     response.say(message, voice='man')
     return HttpResponse(str(response))
