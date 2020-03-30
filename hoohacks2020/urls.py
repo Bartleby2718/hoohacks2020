@@ -20,6 +20,6 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('favicon.ico', RedirectView.as_view(
-        url='/static/favicon.ico', permanent=True)),
+        url='/static/hoobert.png', permanent=True)),
     path('', include('quotes.urls')),
 ]
